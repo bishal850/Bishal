@@ -1,0 +1,19 @@
+node 
+{
+    stage("Cont Download")
+    {
+        git branch: 'main', url: 'https://github.com/bishal850/project01.git'
+    }
+    stage("Gitleaks Scan")
+    {
+        sh 'gitleaks --path=/home/ubuntu/project01 -v'
+    }
+    stage("Cont Build")
+    {
+        sh 'mvn package'
+    }
+    stage("Cont Deployment")
+    {
+        deploy adapters: [tomcat9(credentialsId: '58021844-44a5-4938-9daf-f2ef6f29cd3e', path: '', url: 'http://172.31.50.24:8080')], contextPath: 'cdeploy', war: '**/*.war'
+    }
+}
